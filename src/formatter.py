@@ -6,6 +6,28 @@ from datetime import datetime, timedelta
 import numpy as np
 import configparser
 
+
+
+
+
+
+
+
+
+# TODO: write a main function to check the format and correctly format the data
+def format_data(local_students: pd.DataFrame,
+                incoming_students: pd.DataFrame,
+                local_students_schema: Dict[str, str],
+                incoming_students_schema: Dict[str, str],
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+
+
+
+
+
+  # do a format check on the data to ensure that the data is in the correct format using the format_check.py file
+  print("Formatting data...")
+
 def convert_all_dates_to_datetime(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
   # Convert date columns to datetime objects and extract the date
 
