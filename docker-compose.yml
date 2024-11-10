@@ -1,0 +1,8 @@
+services:
+  buddy-matcher:
+    image: daiigr/buddy-matcher:latest
+    container_name: buddy-matcher
+    volumes:
+      - ./config:/config
+      - ./input:/input
+      - ./output:/output
