@@ -15,19 +15,60 @@ import configparser
 
 
 # TODO: write a main function to check the format and correctly format the data
-def format_data(local_students: pd.DataFrame,
+def validate_and_format_data(local_students: pd.DataFrame,
                 incoming_students: pd.DataFrame,
                 local_students_schema: Dict[str, str],
                 incoming_students_schema: Dict[str, str],
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
 
+    # Validate schemas
+
+    # remove colums not in schema
+
+  print("Hello World!")
 
 
 
 
-  # do a format check on the data to ensure that the data is in the correct format using the format_check.py file
-  print("Formatting data...")
+ #TODO: Implement the date formatter function to replace the convert_all_dates_to_datetime function
+def format_date_columns(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+  print("Hello World!")
 
+
+
+
+
+def format_timestamps(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+  print("Hello World!")
+
+
+
+#TODO: remove the colums that arn't in the schema'
+def format_to_fit_schema(data: pd.DataFrame, schema: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+  print("Hello World!")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# depricated soon
 def convert_all_dates_to_datetime(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
   # Convert date columns to datetime objects and extract the date
 
@@ -72,6 +113,7 @@ def convert_all_dates_to_datetime(local_students: pd.DataFrame, incoming_student
   return local_students, incoming_students
 
 
+# depricated soon
 def rename_timestamps(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Renames the first column of both local and incoming students DataFrames to 'Timestamp'.
@@ -93,6 +135,8 @@ def rename_timestamps(local_students: pd.DataFrame, incoming_students: pd.DataFr
     return local_students, incoming_students
 
 
+
+# depricated soon
 def drop_irrelevant_columns(local_students: pd.DataFrame,
                             incoming_students: pd.DataFrame,
                             faculty_distances: Optional[pd.DataFrame] = None,
@@ -150,7 +194,7 @@ def drop_irrelevant_columns(local_students: pd.DataFrame,
   return local_students_copy, incoming_students_copy
 
 
-
+# depricated soon
 def read_column_mapping(filename: str) -> Dict[str,str]:
     """Reads the column mapping from the configuration file.
     Returns:
@@ -170,7 +214,7 @@ def read_column_mapping(filename: str) -> Dict[str,str]:
 
 
 
-
+# depricated soon
 def remap_columns(mapping_dict: Dict[str,str], Dataframe: pd.DataFrame) -> pd.DataFrame:
     """Remaps columns in a DataFrame based on a mapping dictionary.
 
@@ -190,7 +234,7 @@ def remap_columns(mapping_dict: Dict[str,str], Dataframe: pd.DataFrame) -> pd.Da
 
 
 
-
+# depricated soon
 def convert_categories_to_numerical(local_students_df: pd.DataFrame,
                                     incoming_students_df: pd.DataFrame,
                                     hobbies: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -237,7 +281,7 @@ def convert_categories_to_numerical(local_students_df: pd.DataFrame,
 
 
 
-
+#depricated soon
 def adjust_dates(date: Union[str, datetime], current_date: datetime) -> datetime:
     parsed_date = pd.to_datetime(date).to_pydatetime()
     return parsed_date if parsed_date > current_date else current_date
@@ -246,7 +290,7 @@ def adjust_dates(date: Union[str, datetime], current_date: datetime) -> datetime
 
 
 
-
+# depricated soon
 def adjust_dataframe_dates(dataframe: pd.DataFrame, columns: List[str], current_date: datetime) -> None:
     dataframe = dataframe.copy()
     adjust_dates_vectorized = np.vectorize(adjust_dates)
