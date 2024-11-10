@@ -1,13 +1,9 @@
-# ESN Buddy Matcher
+# <img src="assets/logo.png" alt="Logo" width="30" height="30"> ESN Buddy Matcher
+
 
 ## Introduction
 
 This project is a student pair-matching system aimed at matching local students with incoming international students based on their common interests, courses, and faculties. This can be used by higher institutions for an effective buddy system where international students are paired with a local student of the same interest.
-
-
-
-
-
 
 ## Usage
 the best way to use this project is though a docker container as it will ensure that all dependencies are installed and the script is run in a controlled environment. To use the docker container, follow the steps below:

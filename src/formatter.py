@@ -23,23 +23,9 @@ def validate_and_format_data(local_students: pd.DataFrame,
 
     # Validate schemas
 
-    # remove colums not in schema
+    # format to fit schema
 
-  print("Hello World!")
-
-
-
-
- #TODO: Implement the date formatter function to replace the convert_all_dates_to_datetime function
-def format_date_columns(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-  print("Hello World!")
-
-
-
-
-
-def format_timestamps(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-  print("Hello World!")
+   print("Hello World!")
 
 
 
@@ -68,7 +54,7 @@ def format_to_fit_schema(data: pd.DataFrame, schema: pd.DataFrame) -> Tuple[pd.D
 
 
 
-# depricated soon
+# depricated soon( date aviablity will be removed)
 def convert_all_dates_to_datetime(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
   # Convert date columns to datetime objects and extract the date
 
@@ -113,7 +99,7 @@ def convert_all_dates_to_datetime(local_students: pd.DataFrame, incoming_student
   return local_students, incoming_students
 
 
-# depricated soon
+# depricated soon (date aviablity will be removed)
 def rename_timestamps(local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Renames the first column of both local and incoming students DataFrames to 'Timestamp'.
@@ -136,7 +122,7 @@ def rename_timestamps(local_students: pd.DataFrame, incoming_students: pd.DataFr
 
 
 
-# depricated soon
+# depricated soon (renamed to format_to_fit_schema)
 def drop_irrelevant_columns(local_students: pd.DataFrame,
                             incoming_students: pd.DataFrame,
                             faculty_distances: Optional[pd.DataFrame] = None,
@@ -301,7 +287,7 @@ def adjust_dataframe_dates(dataframe: pd.DataFrame, columns: List[str], current_
 
 
 
-
+# depricated soon (should be moved to different file )
 def get_base_capacities(local_students: pd.DataFrame) -> int:
     """Function to get the base capacities of the local students and the necessity of incoming students"""
     base_local_capacity: int = int(local_students['Capacity'].sum())
@@ -312,6 +298,7 @@ def get_base_capacities(local_students: pd.DataFrame) -> int:
 
 
 
+# depricated soon (should be moved to different file )
 def get_base_necessity(incoming_students: pd.DataFrame) -> int:
     """Function to get the base necessity of incoming students"""
     base_necessity: int = int(incoming_students.count(axis=1).count())
