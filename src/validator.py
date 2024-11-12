@@ -6,7 +6,8 @@ from datetime import datetime
 #TODO: Implement the schema validator
 def validate_schema(data: pd.DataFrame, schema: pd.DataFrame) -> bool:
   # return True if each column in the data is present in the schema
-  return True
+  schema_question_text = schema['questionText']
+  return all(column in schema_question_text for column in data.columns)
 
 
 # TODO: Implement the age validator
