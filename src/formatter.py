@@ -1,4 +1,3 @@
-import format_check
 import pandas as pd
 import colorlog as logging
 from typing import Tuple, Optional, Union, List, Dict
