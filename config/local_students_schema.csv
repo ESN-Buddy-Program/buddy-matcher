@@ -1,0 +1,27 @@
+questionText, headerName
+
+First Name, firstName
+Last Name, lastName
+E-mail Address, email
+Phone number, phone
+Age (today) , age
+What is your gender?, gender
+What is your country of origin?, country
+Which University are you enrolled in?, university
+Which faculty will you be studying at?, facultyRUG
+What is the official title of your study?, studyRUG
+Which school will you be studying at?, schoolHanze
+What is the official title of your study?, studyHanze
+What do you expect from the Buddy Programme?, expectations
+Do you have a preference for the gender of your buddy?, genderPreference
+If applicable: How important is the gender preference to you?, genderPreferenceImportance
+When it comes to trying new things—like tasting an unfamiliar food or visiting a new place or learning a new skill—how likely are you to give it a go?, openness
+How much do you like to stay organised and stick to a plan when working toward a goal whether it’s a project at work or school or something personal?, conscientiousness
+When it comes to spending your free time: how often do you prefer to be around people versus spending time on your own?, extraversion
+When you disagree with someone—maybe a friend or family member or coworker—how often do you try to keep things peaceful versus discussing your different views?, agreeableness
+When faced with a situation that might go wrong—like an exam or a job interview or a big presentation—how often do you find yourself worrying?, neuroticism
+How confident are you in your ability to handle new challenges or unfamiliar situations whether it’s at work or in a hobby or in everyday life?, selfEfficacy
+When you’re around new people: how important is it for you to find common ground or are you happy to get to know different perspectives?, harmony
+Interest 1, interest1
+Interest 2, interest2
+Interest 3, interest3
