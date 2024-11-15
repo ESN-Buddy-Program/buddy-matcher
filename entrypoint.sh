@@ -19,5 +19,4 @@ else
   echo "No default config files found in /default-config."
 fi
 
-# Check if local_students.csv and input.csv exist in /input
 exec python3 src/main.py "$@"

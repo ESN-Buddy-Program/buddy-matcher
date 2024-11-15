@@ -1,6 +1,4 @@
 questionText, headerName
-
-
 First Name, firstName
 Last Name, lastName
 E-mail Address, email
@@ -17,7 +15,7 @@ What do you expect from the Buddy Programme?, expectations
 Do you have a preference for the gender of your buddy?, genderPreference
 If applicable: How important is the gender preference to you?, genderPreferenceImportance
 When it comes to trying new things—like tasting an unfamiliar food visiting or a new place or learning a new skill—how likely are you to give it a go?, openness
-How much do you like to stay organized and stick to a plan when working toward a goal whether it’s a project at work or school or something personal?, consientiousness
+How much do you like to stay organized and stick to a plan when working toward a goal whether it’s a project at work or school or something personal?, conscientiousness
 When it comes to spending your free time: how often do you prefer to be around people versus spending time on your own?, extraversion
 When you disagree with someone—maybe a friend or family member or coworker—how often do you try to keep things peaceful versus discussing your different views?, agreeableness
 When faced with a situation that might go wrong—like an exam or a job interview—how often do you find yourself worrying?, neuroticism

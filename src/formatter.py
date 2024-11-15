@@ -20,12 +20,18 @@ def validate_and_format_data(local_students: pd.DataFrame,
     if not is_valid_schema_local:
         log.error("Local students data does not match the schema.")
         raise ValueError("Local students data does not match the schema.")
+    log.info("local schema matches")
+
     is_valid_schema_incoming = validator.validate_schema(incoming_students, incoming_students_schema)
     if not is_valid_schema_incoming:
         log.error("Incoming students data does not match the schema.")
         raise ValueError("Incoming students data does not match the schema.")
+    log.info("incoming schema matches")
 
+    log.info("Data is valid")
     # format to fit schema
+    print(local_students_schema)
+    print(incoming_students_schema)
     local_students = format_to_fit_schema(local_students, local_students_schema)
     incoming_students = format_to_fit_schema(incoming_students, incoming_students_schema)
 
@@ -33,20 +39,15 @@ def validate_and_format_data(local_students: pd.DataFrame,
 
 
 # remove the colums that arn't in the schema'
-def format_to_fit_schema(data: pd.DataFrame, schema: pd.DataFrame) -> pd.DataFrame:
+def format_to_fit_schema(data: pd.DataFrame, schema: pd.DataFrame) -> Union[pd.DataFrame , pd.Series, None]:
+  columns_to_keep: List[str] = schema['questionText'].tolist()
 
-  # rename the columns to match the schema
-  data = data.rename(columns = schema.set_index('questionText')['headerName'].to_dict())
-  # drop the columns that are not in the schema
-  columns_to_keep: list = schema['headerName'].tolist()
-  filtered_data: pd.DataFrame | pd.Series = data[columns_to_keep]
-
-  if isinstance(filtered_data, pd.Series):
-    log.error("Data is not a DataFrame")
-    raise ValueError("Data is not a DataFrame")
-
-  return filtered_data
-
+  # Remove columns that are not in the schema
+  #
+  # if data[columns_to_keep ]
+  if
+  removed_columns = data[columns_to_keep]
+  return removed_columns
 
 
 
