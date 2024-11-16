@@ -7,10 +7,10 @@ Age (today),age
 What is your gender?,gender
 What is your country of origin?,country
 Which University are you enrolled in?,university
-Which faculty will you be studying at?,facultyRUG
-What is the official title of your study?,studyRUG
-Which school will you be studying at?,schoolHanze
-What is the official title of your study?,studyHanze
+(RUG)Which faculty will you be studying at?,facultyRUG
+(RUG)What is the official title of your study?,studyRUG
+(HANZE)Which school will you be studying at?,schoolHanze
+(HANZE)What is the official title of your study?,studyHanze
 What do you expect from the Buddy Programme?,expectations
 Do you have a preference for the gender of your buddy?,genderPreference
 If applicable: How important is the gender preference to you?, genderPreferenceImportance
