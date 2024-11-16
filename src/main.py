@@ -49,8 +49,23 @@ def main():
 
   local_students , incoming_students = formatter.validate_and_format_data(local_students, incoming_students, local_students_schema, incoming_students_schema)
 
-  print("local student columns: ", local_students.columns)
-  print("incoming student columns:", incoming_students.columns)
+
+  # Filter out outliers from the data
+  threshold: float = 4.0
+
+  # look for outliers by age in the incoming students
+  local_std: float = float(local_students['age'].std())
+  incoming_outliers = outlier_calculator.calculate_outliers(incoming_students, threshold=threshold, std= local_std)
+
+  logging.info("Outliers calculated")
+  are_outliers: bool = any(incoming_outliers)
+  if are_outliers:
+     logging.warning("Outliers found in incoming students using a threshold of %i and a STD of %s", threshold, local_std)
+     str_outlier = outlier_calculator.outliers_to_str(incoming_students, incoming_outliers)
+     for i in str_outlier:
+        #print in red color
+        print(f"\033[91m{i}\033[00m")
+     logging.info("Outliers printed")
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ def calculate_outliers(data: pd.DataFrame, threshold: float = 2.0, std: float = 
         pd.Series: Boolean series indicating whether each data point is an outlier.
     """
     # Extract age data from the DataFrame
-    age_data: pd.Series = pd.Series(data['Age'].values)
+    age_data: pd.Series = pd.Series(data['age'].values)
     mean_data = age_data.mean()
     z_scores = (age_data - mean_data) / std
     outliers: pd.Series = (z_scores < -threshold) | (z_scores > threshold)
@@ -43,9 +43,9 @@ def outliers_to_str(data: pd.DataFrame, outliers: pd.Series) -> list[str]:
 
     for index, value in outliers.items():
         if value:
-            first_name = data.iloc[index]['FirstName']
-            last_name = data.iloc[index]['LastName']
-            age = data.iloc[index]['Age']
+            first_name = data.iloc[index]['firstName']
+            last_name = data.iloc[index]['lastName']
+            age = data.iloc[index]['age']
             outlier_names.append(f"{first_name} {last_name}  ({age} years)")
 
     return outlier_names
