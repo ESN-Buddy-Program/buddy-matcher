@@ -1,5 +1,5 @@
 import pandas as pd
-import colorlog as logging
+import colorlog as log
 
 def convert_matching_matrix_to_output(
     matching_matrix: pd.DataFrame,
@@ -42,7 +42,7 @@ def save_report(output: pd.DataFrame, output_file: str) -> None:
     Save the report to a file
     """
     output.to_csv(output_file, index=False)
-    logging.info("Report saved to %s", output_file)
+    log.info("Report saved to %s", output_file)
 
 
 
