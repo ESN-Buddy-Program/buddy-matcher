@@ -2,7 +2,7 @@ import munkres
 import pandas as pd
 import numpy as np
 from pandas.core.groupby.groupby import Union
-import colorlog as logging
+import colorlog as log
 from tqdm import tqdm
 from scipy.optimize import linear_sum_assignment
 
@@ -61,8 +61,8 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
             # Apply the algorithm to the matrix
             indexes = m.compute(matrix)
 
-            logging.info(indexes)
-            logging.info("Creating pair set %i", i)
+            log.info(indexes)
+            log.info("Creating pair set %i", i)
 
             for row, column in indexes:
                 matching_matrix.iloc[row, column] = 1

@@ -1,5 +1,5 @@
 import pandas as pd
-import colorlog as logging
+import colorlog as log
 from typing import Tuple, Optional, Union, List, Dict
 from datetime import datetime, timedelta
 import numpy as np
@@ -26,9 +26,9 @@ def validate_and_format_data(local_students: pd.DataFrame,
         raise ValueError("Incoming students data does not match the schema.")
 
     # format to fit schema
-    print("formatting local student data")
+    log.info("Formatting local student data")
     local_students = format_to_fit_schema(local_students, local_students_schema)
-    print("formatting incoming student data")
+    log.info("Formatting incoming student data")
     incoming_students = format_to_fit_schema(incoming_students, incoming_students_schema)
 
     return local_students, incoming_students
@@ -57,28 +57,10 @@ def format_to_fit_schema(data: pd.DataFrame, schema: pd.DataFrame) -> pd.DataFra
     # Filter the DataFrame to only include columns that exist in the data
     columns_to_keep = [col for col in columns_to_keep if col in data.columns]
     filtered_data = data[columns_to_keep]
-    log.info("Filtered data: %s", filtered_data.head())  # Display the first few rows for debugging
+    log.info("Filtered data: %s", filtered_data.shape)
 
     if not isinstance(filtered_data, pd.DataFrame):
         log.error("Filtered data is not a DataFrame")
         raise ValueError("Filtered data is not a DataFrame")
 
     return filtered_data
-
-
-
-
-
-# depricated soon (should be moved to different file )
-def get_base_capacities(local_students: pd.DataFrame) -> int:
-    """Function to get the base capacities of the local students and the necessity of incoming students"""
-    base_local_capacity: int = int(local_students['Capacity'].sum())
-    return base_local_capacity
-
-
-
-# depricated soon (should be moved to different file )
-def get_base_necessity(incoming_students: pd.DataFrame) -> int:
-    """Function to get the base necessity of incoming students"""
-    base_necessity: int = int(incoming_students.count(axis=1).count())
-    return base_necessity
