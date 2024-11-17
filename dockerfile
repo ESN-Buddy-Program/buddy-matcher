@@ -8,8 +8,19 @@ WORKDIR /app
 COPY requirements.txt ./
 
 
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+  gcc \
+  g++ \
+  libcairo2-dev \
+  libffi-dev \
+  build-essential \
+  && apt-get clean
 
-# Install dependencies
+
+
+# copy requirements and install them
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/  ./src/
