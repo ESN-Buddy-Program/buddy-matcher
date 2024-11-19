@@ -62,7 +62,7 @@ def main():
   ages = counts.index
   # Create the figure
   fig = termplotlib.figure()
-  fig.barh(counts, ages, force_ascii=True)
+  fig.barh(counts, ages, force_ascii=False)
   fig.show()
   sys.stdout.flush()
 
@@ -77,12 +77,15 @@ def main():
   log.info("Outliers calculated")
   are_outliers: bool = any(incoming_outliers)
   if are_outliers:
-     log.warning("Outliers found in incoming students using a threshold of %.001f and a STD of %.001f", threshold, local_std)
-     str_outlier = outlier_calculator.outliers_to_str(incoming_students, incoming_outliers)
-     for i in str_outlier:
+    log.warning("Outliers found")
+    log.warning("local std: %.001f, local_mean: %.001f", local_std, local_students['age'].mean())
+    log.warning("z-score threshold: %.001f", threshold)
+    print (incoming_outliers)
+    str_outlier = outlier_calculator.outliers_to_str(incoming_students, incoming_outliers)
+    for i in str_outlier:
         #print in red color
         log.warning(f"\033[91m{i}\033[00m")
-     incoming_students = outlier_calculator.remove_outliers(incoming_students, incoming_outliers)
+    incoming_students = outlier_calculator.remove_outliers(incoming_students, incoming_outliers)
   else:
       log.info("No outliers found in incoming students using a threshold of %.001f and a STD of %.001f", threshold, local_std)
 
@@ -93,9 +96,11 @@ def main():
   ages = counts.index
   # Create the figure
   fig = termplotlib.figure()
-  fig.barh(counts, ages, force_ascii=True)
+  fig.barh(counts, ages, force_ascii=False)
   fig.show()
   sys.stdout.flush()
+
+
 
 
 

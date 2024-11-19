@@ -1,7 +1,10 @@
 
 import pandas as pd
 
-def calculate_distance_matrix(local_students: pd.DataFrame, incoming_students: pd.DataFrame, weights: pd.DataFrame) -> pd.DataFrame:
+def calculate_distance_matrix(
+  local_students: pd.DataFrame,
+  incoming_students: pd.DataFrame,
+  weights: pd.DataFrame) -> pd.DataFrame:
     """Calculates the distance matrix between local and incoming students.
 
     Args:
