@@ -1,7 +1,7 @@
 # format validator
 
 import pandas as pd
-from datetime import datetime
+
 
 def validate_schema(data: pd.DataFrame, schema: pd.DataFrame) -> list[str]:
     # Create a list to store the columns that do not match the schema

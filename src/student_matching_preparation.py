@@ -1,6 +1,6 @@
 import pandas as pd
-from typing import Union, Tuple
-import numpy as np
+from typing import Tuple
+
 
 def add_matches_column(df: pd.DataFrame) -> pd.DataFrame:
 
@@ -16,7 +16,8 @@ def add_matches_column(df: pd.DataFrame) -> pd.DataFrame:
     """
 
     if 'Matches' not in df.columns:
-        df['Matches'] = None  # You can initialize it with any default value you like
+        # You can initialize it with any default value you like
+        df['Matches'] = None
         print("'Matches' column added.")
     else:
         print("'Matches' column already exists.")
@@ -37,7 +38,7 @@ def add_id(df: pd.DataFrame) -> pd.DataFrame:
 
     df_copy = df.copy()
     if 'id' not in df_copy.columns:
-        df_copy = df_copy.reset_index().rename(columns={'index':'id'})
+        df_copy = df_copy.reset_index().rename(columns={'index': 'id'})
         print("'id' column added.")
     else:
         print("'id' column already exists.")
@@ -46,37 +47,43 @@ def add_id(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def adjust_capacity(df: pd.DataFrame, column: str) -> pd.DataFrame:
-  """
-    Adjusts the capacity of the DataFrame based on the values in the specified column.
+    """
+      Adjusts the capacity of the DataFrame based on the values in the specified column.
 
-    Parameters:
-    df (pd.DataFrame): The DataFrame to adjust.
-    column (str): The column containing the values to adjust the capacity.
+      Parameters:
+      df (pd.DataFrame): The DataFrame to adjust.
+      column (str): The column containing the values to adjust the capacity.
 
-    Returns:
-    pd.DataFrame: The DataFrame with the adjusted capacity.
-  """
-  # Create a copy of the dataframe to avoid modifying the original
-  df_copy = df.copy()
+      Returns:
+      pd.DataFrame: The DataFrame with the adjusted capacity.
+    """
+    # Create a copy of the dataframe to avoid modifying the original
+    df_copy = df.copy()
 
-  # Duplicate rows based on the values in the specified column
-  df_copy = df_copy.loc[df_copy.index.repeat(df_copy[column])]
+    # Duplicate rows based on the values in the specified column
+    df_copy = df_copy.loc[df_copy.index.repeat(df_copy[column])]
 
-  # Assign 1 to the specified column and 'No' to a new 'Extra' column
-  df_copy = df_copy.assign(**{column: 1, 'Extra': 'No'})
+    # Assign 1 to the specified column and 'No' to a new 'Extra' column
+    df_copy = df_copy.assign(**{column: 1, 'Extra': 'No'})
 
-  return df_copy
+    return df_copy
 
-def handle_extra_buddies(base_local_capacity: int, base_necessity: int, local_students_copy: pd.DataFrame) -> Tuple[str, pd.DataFrame]:
+
+def handle_extra_buddies(
+  base_local_capacity: int,
+  base_necessity: int,
+  local_students_copy: pd.DataFrame) -> Tuple[str, pd.DataFrame]:
     if base_local_capacity < base_necessity:
         message = "Extra Students Needed"
         additional_local_students = local_students_copy.loc[
             local_students_copy['ExtraBuddy'] == 'Yes'].assign(Capacity=0)
-        local_students_copy = pd.concat([local_students_copy, additional_local_students],
-                                             ignore_index=True,
-                                             axis=0).sort_values('id').reset_index(drop=True)
+        local_students_copy = pd.concat([local_students_copy,
+                                        additional_local_students],
+                                        ignore_index=True,
+                                        axis=0).sort_values('id').reset_index(drop=True)
     else:
-        local_students_copy = local_students_copy.sort_values('id').reset_index(drop=True)
+        local_students_copy = local_students_copy.sort_values(
+            'id').reset_index(drop=True)
         message = "No Extra Students Needed"
 
     return message, local_students_copy

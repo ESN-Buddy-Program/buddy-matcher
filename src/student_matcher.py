@@ -1,10 +1,8 @@
 import munkres
 import pandas as pd
 import numpy as np
-from pandas.core.groupby.groupby import Union
 import colorlog as log
-from tqdm import tqdm
-from scipy.optimize import linear_sum_assignment
+
 
 def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.DataFrame, incoming_students: pd.DataFrame, base_local_capacity: int, base_incoming_necessity: int) -> pd.DataFrame:
     """
@@ -30,13 +28,14 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
     local_students = local_students.copy()
     incoming_students = incoming_students.copy()
 
-    matching_matrix: pd.DataFrame = pd.DataFrame(np.zeros((len(local_students), len(incoming_students))), index=local_students.index, columns=incoming_students.index)
+    matching_matrix: pd.DataFrame = pd.DataFrame(np.zeros((len(local_students), len(
+        incoming_students))), index=local_students.index, columns=incoming_students.index)
     # Get the highest capacity local student
     highest_capacity: int = int(local_students['Capacity'].max())
     print(highest_capacity)
 
     # Keep track of the matched incoming students
-    matched_incoming_students = set()
+    matched_incoming_students: set[str] = set()
 
     for i in range(highest_capacity):
         # Remove local students who do not have enough capacity for i matches
@@ -48,7 +47,8 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
                 local_students = local_students.drop(index)
 
         # Filter distance_matrix to exclude matched incoming students
-        distance_matrix_filtered = distance_matrix.loc[:, ~distance_matrix.columns.isin(matched_incoming_students)]
+        distance_matrix_filtered = distance_matrix.loc[:, ~distance_matrix.columns.isin(
+            matched_incoming_students)]
         print(distance_matrix_filtered)
 
         # Only proceed if there are local students and incoming students to match
@@ -66,5 +66,7 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
 
             for row, column in indexes:
                 matching_matrix.iloc[row, column] = 1
-                matched_incoming_students.add(distance_matrix_filtered.columns[column])  # Add matched incoming student to the set
+                # Add matched incoming student to the set
+                matched_incoming_students.add(
+                    distance_matrix_filtered.columns[column])
     return matching_matrix
