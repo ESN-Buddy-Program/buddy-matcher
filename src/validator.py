@@ -1,11 +1,10 @@
 # format validator
-
 import pandas as pd
 
 
 def validate_schema(data: pd.DataFrame, schema: pd.DataFrame) -> list[str]:
     # Create a list to store the columns that do not match the schema
-    mismatched_columns = []
+    mismatched_columns: list[str] = []
 
     # Iterate over each column in the data
     for column in data.columns:

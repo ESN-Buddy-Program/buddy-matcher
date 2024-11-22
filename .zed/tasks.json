@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Build And Run Buddy Matcher",
+    "command": "bash scripts/run.sh",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never",
+    "shell": {
+      "with_arguments": {
+        "program": "/bin/zsh",
+        "args": [
+          "--login"
+        ]
+      }
+    }
+  },
+  {
+    "label": "Initialize Development Environment",
+    "command": "bash scripts/init_dev_env.sh",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never",
+    "shell": {
+      "with_arguments": {
+        "program": "/bin/zsh",
+        "args": [
+          "--login"
+        ]
+      }
+    }
+  },
+  {
+    "label": "Clean Up Docker Resources",
+    "command": "bash scripts/clean.sh",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never",
+    "shell": {
+      "with_arguments": {
+        "program": "/bin/zsh",
+        "args": [
+          "--login"
+        ]
+      }
+    }
+  }
+]

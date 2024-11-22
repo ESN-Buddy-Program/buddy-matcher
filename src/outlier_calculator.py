@@ -55,6 +55,6 @@ def outliers_to_str(data: pd.DataFrame, outliers: pd.DataFrame) -> list[str]:
                 age = row["age"].iloc[0]
                 # Append the formatted name to the list of outliers
                 outlier_names.append(
-                    f"{first_name} {last_name}  ({age}, z:{value['z_score']:.2f})")
+                    f"{first_name} {last_name} ({age})")
 
     return outlier_names
