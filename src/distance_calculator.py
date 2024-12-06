@@ -1,5 +1,5 @@
-
-# import pandas as pd
+import pandas as pd
+import math
 
 
 # def calculate_distance_matrix(
@@ -30,3 +30,20 @@
 #         local_student: pd.Series,
 #         incoming_student: pd.Series, weights: pd.DataFrame) -> float:
 #     return 1
+
+
+def sigmoid(x: float) -> float:
+    return 1 / (1 + math.exp(-x))
+
+def calculate_age_distance(
+  local_students: pd.Series,
+  incoming_student: pd.Series,
+  age_tolerance: int = 5
+) -> float:
+
+    local_age = local_students['Age']
+    incoming_age = incoming_student['Age']
+
+    age_difference = abs(int(local_age) - int(incoming_age))
+
+    return sigmoid(age_difference/age_tolerance)
