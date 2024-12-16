@@ -21,7 +21,7 @@ def main():
     log.info("Local students loaded [%s]", local_students.shape)
 
     incoming_students: pd.DataFrame = pd.read_csv(
-        "/input/incoRming_students.csv", skipinitialspace=True)
+        "/input/incoming_students.csv", skipinitialspace=True)
     log.info("Incoming students loaded [%s]", incoming_students.shape)
 
     local_students_schema: pd.DataFrame = pd.read_csv(
