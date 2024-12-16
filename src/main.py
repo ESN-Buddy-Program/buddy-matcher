@@ -1,12 +1,11 @@
 # Importing external libraries
 import pandas as pd
 import pyfiglet
-import termplotlib
 import colorlog as log
 # Importing internal libraries
 import formatter
 import outlier_calculator
-import sys
+
 
 
 def main():
@@ -22,7 +21,7 @@ def main():
     log.info("Local students loaded [%s]", local_students.shape)
 
     incoming_students: pd.DataFrame = pd.read_csv(
-        "/input/incoming_students.csv", skipinitialspace=True)
+        "/input/incoRming_students.csv", skipinitialspace=True)
     log.info("Incoming students loaded [%s]", incoming_students.shape)
 
     local_students_schema: pd.DataFrame = pd.read_csv(
@@ -38,16 +37,6 @@ def main():
     local_students, incoming_students = formatter.validate_and_format_data(
         local_students, incoming_students,
         local_students_schema, incoming_students_schema)
-
-    # Generate histogram data
-    log.info("Generating histogram data")
-    counts = incoming_students['age'].value_counts().sort_index()
-    ages = counts.index
-    # Create the figure
-    fig = termplotlib.figure()
-    fig.barh(counts, ages, force_ascii=False)
-    fig.show()
-    sys.stdout.flush()
 
     # Filter out outliers from the data
     threshold: float = 7.0
@@ -75,16 +64,6 @@ def main():
     else:
         log.info
         log.info("No outliers foundusing a threshold of %.001f", threshold)
-
-    # Generate histogram data
-    log.info("Generating histogram with removed outliers")
-    counts = incoming_students['age'].value_counts().sort_index()
-    ages = counts.index
-    # Create the figure
-    fig = termplotlib.figure()
-    fig.barh(counts, ages, force_ascii=False)
-    fig.show()
-    sys.stdout.flush()
 
 
 if __name__ == '__main__':
