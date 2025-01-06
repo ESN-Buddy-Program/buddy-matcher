@@ -156,8 +156,32 @@ def is_expectations(incoming_student: pd.Series, local_student: pd.Series) -> fl
     Returns:
         float: 0.0 if there's a match in expectations, 1.0 otherwise.
     """
+    expectations_score: float = 0.0
+    if (('I just want someone to answer my questions (online)' in incoming_student['expectations']) and ('I just want to answer some questions (online)' in local_student['expectations'])):
+        expectations_score += 0.0
+    else:
+        expectations_score += 0.2
 
-    return 0.0
+    if(('I want someone to answer my questions in person' in incoming_student['expectations']) and ('I want to answer some questions in person' in local_student['expectations']))
+        expectations_score += 0.0
+    else:
+        expectations_score += 0.2
+
+    if(('I want to be shown around the city' in incoming_student['expectations']) and ('I want to show someone around the city' in local_student['expectations']))
+        expectations_score += 0.0
+    else:
+        expectations_score += 0.2
+
+    if(('I want to meet more frequently' in incoming_student['expectations']) and ('I want to meet more frequently' in local_student['expectations']))
+        expectations_score += 0.0
+    else:
+        expectations_score += 0.2
+    if(('I want to become friends' in incoming_student['expectations']) and ('I want to become friends' in local_student['expectations']))
+        expectations_score += 0.0
+    else:
+        expectations_score += 0.2
+
+    return expectations_score
 
 def gender_preference(incoming_student: pd.Series, local_student: pd.Series) -> float:
     """
