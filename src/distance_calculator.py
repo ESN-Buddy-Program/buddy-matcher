@@ -154,8 +154,42 @@ def is_expectations(incoming_student: pd.Series, local_student: pd.Series) -> fl
         local_student (pd.Series): Details of the local student.
 
     Returns:
-        float: 0.0 if there's a match in expectations, 0.5 for a match in
-       university and 1.0 otherwise.
+        float: 0.0 if there's a match in expectations, 1.0 otherwise.
     """
 
     return 0.0
+
+def gender_preference(incoming_student: pd.Series, local_student: pd.Series) -> float:
+    """
+    Check if the expectations matches between an incoming and a local student.
+
+    Parameters:
+        incoming_student (pd.Series): Details of the incoming student.
+        local_student (pd.Series): Details of the local student.
+
+    Returns:
+        float: 0.0 if there's a match in gender, 0.5 * their preference otherwise.
+    """
+    if incoming_student['genderPreference'] == "I don't have a preference":
+        if local_student['genderPreference'] == "I don't have a preference":
+            return 0.0
+        if local_student['genderPreference'] == incoming_student['gender']:
+            return 0.0
+        else:
+            return 0.5 * local_student['genderPreferenceImportance']
+    else:
+        if incoming_student['genderPreference'] == local_student['gender']:
+            if local_student['genderPreference'] == "I don't have a preference":
+                return 0.0
+            if local_student['genderPreference'] == incoming_student['gender']:
+                return 0.0
+            else:
+                return 0.5 * local_student['genderPreferenceImportance']
+        else:
+            if local_student['genderPreference'] == "I don't have a preference":
+                return 0.5 * incoming_student['genderPreferenceImportance']
+            if local_student['genderPreference'] == incoming_student['gender']:
+                return (0.0 + 0.5 * float( incoming_student['genderPreferenceImportance']))
+            else:
+                return (0.5 * float(local_student['genderPreferenceImportance']) + 0.5 * float(incoming_student['genderPreferenceImportance'])
+)
