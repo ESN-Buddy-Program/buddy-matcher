@@ -66,7 +66,12 @@ def main():
         log.info
         log.info("No outliers foundusing a threshold of %.001f", threshold)
 
-    distance_calculator.calculate_distance_matrix(local_students, incoming_students)
+    matrix:[] = distance_calculator.calculate_distance_matrix(local_students, incoming_students)
+    print(matrix)
+    min: float = 20.0
+    for i in range(len(matrix)):
+        if matrix[i] < min:
+            min = matrix[i]
 
 
 if __name__ == '__main__':
