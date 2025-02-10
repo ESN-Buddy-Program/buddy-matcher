@@ -17,10 +17,11 @@ If applicable: How important is the gender preference to you?,genderPreferenceIm
 When it comes to trying new things—like tasting an unfamiliar food or visiting a new place or learning a new skill—how likely are you to give it a go?,openness
 How much do you like to stay organised and stick to a plan when working toward a goal whether it’s a project at work or school or something personal?,conscientiousness
 When it comes to spending your free time: how often do you prefer to be around people versus spending time on your own?,extraversion
-I often prioritize maintaining harmony in group settings, even if it means putting my own preferences aside?,agreeableness
+I often prioritize maintaining harmony in group settings - even if it means putting my own preferences aside?,agreeableness
 When faced with a situation that might go wrong—like an exam or a job interview or a big presentation—how often do you find yourself worrying?,neuroticism
 How confident are you in your ability to handle new challenges or unfamiliar situations: whether it’s at work or in a hobby or in everyday life?,selfEfficacy
 When you’re around new people: how important is it for you to find common ground or are you happy to get to know different perspectives?,harmony
 Interest 1,interest1
 Interest 2,interest2
 Interest 3,interest3
+How many buddies do you want to have?,buddyCount

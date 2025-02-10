@@ -31,7 +31,7 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
     matching_matrix: pd.DataFrame = pd.DataFrame(np.zeros((len(local_students), len(
         incoming_students))), index=local_students.index, columns=incoming_students.index)
     # Get the highest capacity local student
-    highest_capacity: int = int(local_students['Capacity'].max())
+    highest_capacity: int = int(local_students['buddyCount'].max())
     print(highest_capacity)
 
     # Keep track of the matched incoming students

@@ -5,6 +5,7 @@ import colorlog as log
 # Importing internal libraries
 import formatter
 import outlier_calculator
+import distance_calculator
 
 
 
@@ -64,6 +65,8 @@ def main():
     else:
         log.info
         log.info("No outliers foundusing a threshold of %.001f", threshold)
+
+    distance_calculator.calculate_distance_matrix(local_students, incoming_students)
 
 
 if __name__ == '__main__':
