@@ -4,23 +4,21 @@ import pandas as pd
 def calculate_distance_matrix(
         local_students: pd.DataFrame,
         incoming_students: pd.DataFrame) -> pd.DataFrame:
-#     """Calculates the distance matrix between local and incoming students.
+    """Calculates the distance matrix between local and incoming students."""
 
-#     Args:
-#         local_students (pd.DataFrame): DataFrame of local student data.
-#         incoming_students (pd.DataFrame): DataFrame of incoming student data.
+    # Create an empty DataFrame to store the distance matrix
+    distance_matrix = pd.DataFrame(
+        index=local_students.index,
+        columns=incoming_students.index
+    )
 
-#     Returns:
-#         pd.DataFrame: Distance matrix between local and incoming students.
-#     """
-#     # Create an empty DataFrame to store the distance matrix
-    distance_matrix: pd.DataFrame = pd.DataFrame(index=local_students.index,
-        columns=incoming_students.index)
-    # configure the pd.DataFrame
-    for local_student in local_students:
-        for incoming_student in incoming_students:
-            distance_matrix.loc[local_student, incoming_student] = calculate_distance(
-                local_students.loc[local_student], incoming_students.loc[incoming_student])
+    # Iterate over indices, not column names
+    for local_idx in local_students.index:
+        for incoming_idx in incoming_students.index:
+            distance_matrix.loc[local_idx, incoming_idx] = calculate_distance(
+                local_students.iloc[local_idx],
+                incoming_students.iloc[incoming_idx]
+            )
 
     return distance_matrix
 
@@ -46,13 +44,21 @@ def is_same_university(incoming_student: pd.Series, local_student: pd.Series) ->
         float: 0.0 if there's a match in university and study field, 0.5 for a match in
        university and 1.0 otherwise.
     """
-    if incoming_student['University'] == local_student['University']:
-        if incoming_student ['Faculty'] == local_student['Faculty']:
-            return 0.0
-        else:
-            return 0.5
-    else:
-        return 1.0
+    if incoming_student['university'] == local_student['university']:
+      # If RUG student, check facultyRUG
+      if incoming_student['university'] == 'RUG':
+          if incoming_student['facultyRUG'] == local_student['facultyRUG']:
+              return 0.0
+          else:
+              return 0.5
+      # If Hanze student, check schoolHanze
+      elif incoming_student['university'] == 'Hanze':
+          if incoming_student['schoolHanze'] == local_student['schoolHanze']:
+              return 0.0
+          else:
+              return 0.5
+
+    return 1.0
 
 def similar_personalities(incoming_student: pd.Series, local_student: pd.Series) -> float:
     """
@@ -65,6 +71,12 @@ def similar_personalities(incoming_student: pd.Series, local_student: pd.Series)
     Returns:
         float: 0.0 if there's a match in personalities, 1.0 otherwise.
     """
+
+    # check if column exists in both dataframes
+    if 'openess' not in incoming_student or 'openess' not in local_student:
+      #lazy safeguard
+        return 1.0
+
     personality_match: float = 0.0
 
     if ((incoming_student['openess'] == local_student['openess']) or
