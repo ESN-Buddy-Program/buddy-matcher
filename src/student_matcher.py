@@ -114,8 +114,10 @@ def generate_matching_table(matching_matrix: pd.DataFrame, local_students: pd.Da
                 matching_rows.append({
                     "Local Name": local_name,
                     "Local Email": local.get("email", ""),
+                    "local Age" : local.get("age", ""),
                     "Local Phone": local.get("phone", ""),
                     "Incoming Name": incoming_name,
+                    "Incoming Age" : incoming.get("age", ""),
                     "Incoming Email": incoming.get("email", ""),
                     "Incoming Phone": incoming.get("phone", "")
                 })
