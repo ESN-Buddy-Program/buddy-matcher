@@ -1,65 +1,57 @@
 import pandas as pd
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from scipy.optimize import linear_sum_assignment
+from sentence_transformers import SentenceTransformer, util
 
-# Load a pre-trained model to generate text embeddings.
-# (You might need to install the package with: pip install sentence-transformers)
-model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
-
+# Initialize the embedding model (you can choose another model if preferred)
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def calculate_hobby_simularity(local_student: pd.Series, incoming_student: pd.Series) -> float:
     """
-    Calculate the hobby similarity between a local student and an incoming student by computing
-    the sine difference between the embeddings of their hobby interest strings.
+    Calculate the hobby similarity between a local student and an incoming student.
 
-    This function retrieves the 'interest1', 'interest2', and 'interest3' fields from both student records.
-    For each interest, it obtains an embedding using a pre-trained sentence transformer and computes the cosine
-    similarity. It then converts the cosine similarity into a sine difference using:
-
-        sine_difference = sin(arccos(cosine_similarity))
-
-    which yields 0 when the interests are identical (perfect match) and values closer to 1 for less similar interests.
-    The final result is the average sine difference across all three interests.
+    Both students have three interest fields: 'interest1', 'interest2', 'interest3'.
+    We compute embeddings for each interest, calculate pairwise cosine distances between
+    the interests (where a distance of 0 indicates identical interests), and then use the
+    Hungarian algorithm to optimally match the interests and return the average distance.
 
     Args:
-        local_student (pd.Series): The local student's data, including hobby fields.
-        incoming_student (pd.Series): The incoming student's data, including hobby fields.
+        local_student (pd.Series): A series with at least keys 'interest1', 'interest2', 'interest3'.
+        incoming_student (pd.Series): A series with at least keys 'interest1', 'interest2', 'interest3'.
 
     Returns:
-        float: The average sine difference across the three interest fields.
+        float: The average cosine distance (0 = very similar, higher = less similar).
     """
-    interests = ['interest1', 'interest2', 'interest3']
-    sine_differences = []
 
-    for interest in interests:
-        # Retrieve the hobby strings; use empty string if not present.
-        local_interest = local_student.get(interest, "")
-        incoming_interest = incoming_student.get(interest, "")
+    # Extract the interest strings for each student
+    local_interests = [
+        str(local_student.get('interest1') or ""),
+        str(local_student.get('interest2') or ""),
+        str(local_student.get('interest3') or "")
+    ]
 
-        # If either interest is missing or empty, we assume maximal difference.
-        if not local_interest or not incoming_interest:
-            sine_differences.append(1.0)
-            continue
+    incoming_interests = [
+        str(incoming_student.get('interest1') or ""),
+        str(incoming_student.get('interest2') or ""),
+        str(incoming_student.get('interest3') or "")
+    ]
 
-        # Compute the embeddings for the given interest strings.
-        embedding_local = model.encode(local_interest)
-        embedding_incoming = model.encode(incoming_interest)
+    # Compute the embeddings for each list of interests
+    local_embeddings = model.encode(local_interests, convert_to_tensor=True)
+    incoming_embeddings = model.encode(incoming_interests, convert_to_tensor=True)
 
-        # Compute the cosine similarity between the two embeddings.
-        norm_local = np.linalg.norm(embedding_local)
-        norm_incoming = np.linalg.norm(embedding_incoming)
-        if norm_local == 0 or norm_incoming == 0:
-            cosine_sim = 0.0  # Avoid division by zero.
-        else:
-            cosine_sim = np.dot(embedding_local, embedding_incoming) / (norm_local * norm_incoming)
+    # Compute a 3x3 cosine similarity matrix between the two sets of embeddings.
+    # util.cos_sim returns a tensor of cosine similarities.
+    cosine_sim_matrix = util.cos_sim(local_embeddings, incoming_embeddings)
 
-        # Clip the cosine similarity to the valid range [-1, 1] to avoid numerical issues.
-        cosine_sim = np.clip(cosine_sim, -1, 1)
+    # Convert cosine similarity to cosine distance (so that 0 means identical).
+    # Note: cosine_distance = 1 - cosine_similarity.
+    cost_matrix = 1 - cosine_sim_matrix.cpu().numpy()  # Convert to NumPy array if using GPU
 
-        # Convert the cosine similarity to a sine difference.
-        # Note: sin(arccos(x)) == sqrt(1 - x**2) for x in [-1, 1]
-        sine_diff = np.sin(np.arccos(cosine_sim))
-        sine_differences.append(sine_diff)
+    # Use the Hungarian algorithm to find the optimal matching between interests.
+    row_ind, col_ind = linear_sum_assignment(cost_matrix)
 
-    # Return the average sine difference across the three interests.
-    return float(np.mean(sine_differences))
+    # Calculate the average distance for the optimal assignment.
+    average_distance = cost_matrix[row_ind, col_ind].mean()
+
+    return average_distance
