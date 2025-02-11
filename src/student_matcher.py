@@ -41,7 +41,7 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
         # Remove local students who do not have enough capacity for i matches
         # TODO: issue with the indexes because of drops prior to this
         for index, row in local_students.iterrows():
-            if row['Capacity'] < i:
+            if row['buddyCount'] < i:
                 distance_matrix = distance_matrix.drop(index)
                 # Remove them from the local students dataframe (to keep indexes in sync)
                 local_students = local_students.drop(index)
@@ -49,7 +49,6 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
         # Filter distance_matrix to exclude matched incoming students
         distance_matrix_filtered = distance_matrix.loc[:, ~distance_matrix.columns.isin(
             matched_incoming_students)]
-        print(distance_matrix_filtered)
 
         # Only proceed if there are local students and incoming students to match
         if not local_students.empty and not distance_matrix_filtered.empty:

@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from scipy.optimize import linear_sum_assignment
 from sentence_transformers import SentenceTransformer, util
 

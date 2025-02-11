@@ -6,6 +6,7 @@ import colorlog as log
 import formatter
 import outlier_calculator
 import distance_calculator
+import student_matcher
 
 
 
@@ -67,8 +68,18 @@ def main():
         log.info("No outliers foundusing a threshold of %.001f", threshold)
 
 
-    matrix = distance_calculator.calculate_distance_matrix(local_students, incoming_students)
-    print(matrix)
+    distance_matrix= distance_calculator.calculate_distance_matrix(local_students, incoming_students)
+    print(distance_matrix)
+
+    base_local_capacity = local_students['buddyCount'].sum()
+    base_incoming_necessity = incoming_students.shape[0]
+
+
+    matches_matrix = student_matcher.compute_optimal_pairs(
+        distance_matrix, local_students, incoming_students, base_local_capacity, base_incoming_necessity)
+    print(matches_matrix)
+
+
 
 
 if __name__ == '__main__':

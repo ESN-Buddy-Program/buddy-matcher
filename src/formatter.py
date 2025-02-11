@@ -43,7 +43,7 @@ def format_to_fit_schema(
     data = data.rename(columns=rename_map)
 
     # Get the columns to keep based on the schema
-    columns_to_keep: list = schema['headerName'].tolist()
+    columns_to_keep: list = schema['headerName'].tolist()  # type: ignore
 
     # Identify columns that are missing
     missing_columns = [
