@@ -79,6 +79,15 @@ def main():
         distance_matrix, local_students, incoming_students, base_local_capacity, base_incoming_necessity)
     print(matches_matrix)
 
+    matches_table = student_matcher.generate_matching_table(
+        matches_matrix, local_students, incoming_students)
+    print(matches_table)
+
+    # Save the matches to a CSV file
+    matches_table.to_csv("/output/matches.csv")
+
+
+
 
 
 

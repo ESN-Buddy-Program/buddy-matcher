@@ -2,6 +2,7 @@ import munkres
 import pandas as pd
 import numpy as np
 import colorlog as log
+from pandas.io.parsers.base_parser import DataFrame
 
 
 def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.DataFrame, incoming_students: pd.DataFrame, base_local_capacity: int, base_incoming_necessity: int) -> pd.DataFrame:
@@ -69,3 +70,56 @@ def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.Data
                 matched_incoming_students.add(
                     distance_matrix_filtered.columns[column])
     return matching_matrix
+
+def generate_matching_table(matching_matrix: pd.DataFrame, local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> pd.DataFrame:
+    """
+    Generates a table of matched students with their contact details.
+
+    For every match (cell value = 1) in the matching_matrix, this function
+    retrieves the corresponding local and incoming student details and creates
+    a row with:
+        - Local Student: firstName + " " + lastName
+        - Local Email
+        - Local Phone
+        - Incoming Student: firstName + " " + lastName
+        - Incoming Email
+        - Incoming Phone
+
+    Parameters:
+    - matching_matrix (pd.DataFrame): The matrix of matches where 1 indicates a match.
+    - local_students (pd.DataFrame): DataFrame containing local student details.
+    - incoming_students (pd.DataFrame): DataFrame containing incoming student details.
+
+    Returns:
+    - pd.DataFrame: A DataFrame containing paired students and their contact details.
+    """
+
+    # List to store matching details
+    matching_rows = []
+
+    # Iterate through the matching matrix; the index represents local students
+    # and the columns represent incoming students.
+    for local_idx in matching_matrix.index:
+        for incoming_idx in matching_matrix.columns:
+            if matching_matrix.loc[local_idx, incoming_idx] == 1:
+                # Retrieve local and incoming student details.
+                local: pd.Series = local_students.loc[local_idx]
+                incoming: pd.Series = incoming_students.loc[incoming_idx]
+
+                # Create full names by combining first and last names.
+                local_name: str = f"{local['firstName']} {local['lastName']}"
+                incoming_name: str = f"{incoming['firstName']} {incoming['lastName']}"
+
+                # Build a dictionary for the matching row.
+                matching_rows.append({
+                    "Local Name": local_name,
+                    "Local Email": local.get("email", ""),
+                    "Local Phone": local.get("phone", ""),
+                    "Incoming Name": incoming_name,
+                    "Incoming Email": incoming.get("email", ""),
+                    "Incoming Phone": incoming.get("phone", "")
+                })
+
+    # Convert the list of matching rows to a DataFrame.
+    matching_table = pd.DataFrame(matching_rows)
+    return matching_table
