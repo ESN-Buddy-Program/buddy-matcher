@@ -1,4 +1,5 @@
 import pandas as pd
+import hobby_simularity as hs
 
 
 def calculate_distance_matrix(
@@ -29,6 +30,7 @@ def calculate_distance(local_student: pd.Series, incoming_student: pd.Series) ->
     distance += similar_personalities(incoming_student, local_student)
     distance += is_expectations(incoming_student, local_student)
     distance += gender_preference(incoming_student, local_student)
+    distance += hs.calculate_hobby_simularity(local_student, incoming_student)
     return distance
 
 
