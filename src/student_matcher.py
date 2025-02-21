@@ -1,75 +1,101 @@
 import munkres
 import pandas as pd
 import numpy as np
-import colorlog as log
-from pandas.io.parsers.base_parser import DataFrame
 
 
-def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.DataFrame, incoming_students: pd.DataFrame, base_local_capacity: int, base_incoming_necessity: int) -> pd.DataFrame:
+def compute_optimal_pairs(distance_matrix: pd.DataFrame, local_students: pd.DataFrame,
+                          incoming_students: pd.DataFrame, base_local_capacity: int,
+                          base_incoming_necessity: int) -> pd.DataFrame:
     """
     Computes the optimal pairs of local and incoming students based on a distance matrix.
 
-    This function uses the Munkres algorithm to find the best matches between local students and incoming students
-    while considering the capacity of local students and the necessity of incoming students. The function iteratively
-    adjusts the matching based on the capacities of local students, ensuring that only those who can accommodate the
-    current number of matches are considered.
+    This function uses the Munkres algorithm to match local students to incoming students while
+    respecting the capacity of local students. After each round of matching, incoming students that
+    have been matched are removed from further consideration, and local students who have reached their
+    capacity (buddyCount) are removed using remove_matched_local_students.
 
     Parameters:
     - distance_matrix (pd.DataFrame): A DataFrame representing the distances between local and incoming students.
-    - local_students (pd.DataFrame): A DataFrame containing information about local students, including their capacities.
-    - incoming_students (pd.DataFrame): A DataFrame containing information about incoming students.
+    - local_students (pd.DataFrame): A DataFrame containing local student details, including their capacities.
+    - incoming_students (pd.DataFrame): A DataFrame containing incoming student details.
     - base_local_capacity (int): The base capacity limit for local students.
     - base_incoming_necessity (int): The base necessity limit for incoming students.
 
     Returns:
     - pd.DataFrame: A DataFrame indicating the matching between local and incoming students, where 1 indicates a match.
     """
-
-    print(distance_matrix)
+    # Work on copies so we don't modify the original DataFrames.
     local_students = local_students.copy()
     incoming_students = incoming_students.copy()
 
-    matching_matrix: pd.DataFrame = pd.DataFrame(np.zeros((len(local_students), len(
-        incoming_students))), index=local_students.index, columns=incoming_students.index)
-    # Get the highest capacity local student
-    highest_capacity: int = int(local_students['buddyCount'].max())
-    print(highest_capacity)
+    # Create an empty matching matrix.
+    matching_matrix = pd.DataFrame(
+        np.zeros((len(local_students), len(incoming_students))),
+        index=local_students.index,
+        columns=incoming_students.index
+    )
 
-    # Keep track of the matched incoming students
-    matched_incoming_students: set[str] = set()
+    # A set to track incoming students who have already been matched.
+    matched_incoming_students = set()
 
-    for i in range(highest_capacity):
-        # Remove local students who do not have enough capacity for i matches
-        # TODO: issue with the indexes because of drops prior to this
-        for index, row in local_students.iterrows():
-            if row['buddyCount'] < i:
-                distance_matrix = distance_matrix.drop(index)
-                # Remove them from the local students dataframe (to keep indexes in sync)
-                local_students = local_students.drop(index)
+    # Continue iterating until all incoming students are matched or no local students remain.
+    while (len(matched_incoming_students) < len(incoming_students)) and (not local_students.empty):
+        # Filter the distance matrix: use only local students still available and incoming students not yet matched.
+        current_distance_matrix = distance_matrix.loc[
+            local_students.index,
+            [col for col in distance_matrix.columns if col not in matched_incoming_students]
+        ]
 
-        # Filter distance_matrix to exclude matched incoming students
-        distance_matrix_filtered = distance_matrix.loc[:, ~distance_matrix.columns.isin(
-            matched_incoming_students)]
+        if current_distance_matrix.empty:
+            break
 
-        # Only proceed if there are local students and incoming students to match
-        if not local_students.empty and not distance_matrix_filtered.empty:
-            m = munkres.Munkres()
+        # Apply the Munkres algorithm to the filtered distance matrix.
+        m = munkres.Munkres()
+        cost_matrix = current_distance_matrix.values.tolist()
+        indexes = m.compute(cost_matrix)
 
-            # Convert the filtered DataFrame to matrix format
-            matrix: munkres.Matrix = distance_matrix_filtered.values.tolist()
+        # For each pairing provided by Munkres, update the matching if the local student still has capacity.
+        for local_idx, inc_idx in indexes:
+            local_student = current_distance_matrix.index[local_idx]
+            incoming_student = current_distance_matrix.columns[inc_idx]
 
-            # Apply the algorithm to the matrix
-            indexes = m.compute(matrix)
+            # Only assign if this local student hasn't yet reached their buddyCount capacity.
+            if matching_matrix.loc[local_student].sum() < local_students.loc[local_student, 'buddyCount']:
+                matching_matrix.loc[local_student, incoming_student] = 1
+                matched_incoming_students.add(incoming_student)
 
-            log.info(indexes)
-            log.info("Creating pair set %i", i)
+        # Remove local students that have now reached their matching capacity.
+        local_students, distance_matrix = remove_matched_local_students(matching_matrix, local_students, distance_matrix)
 
-            for row, column in indexes:
-                matching_matrix.iloc[row, column] = 1
-                # Add matched incoming student to the set
-                matched_incoming_students.add(
-                    distance_matrix_filtered.columns[column])
     return matching_matrix
+
+
+def remove_matched_local_students(matching_matrix: pd.DataFrame, local_students: pd.DataFrame,
+                                  distance_matrix: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Removes local students who have reached their matching capacity from local_students and distance_matrix.
+
+    A local student is removed if the total number of matches (row sum in matching_matrix) is equal to or
+    exceeds their 'buddyCount' capacity.
+
+    Parameters:
+    - matching_matrix (pd.DataFrame): The matrix of matches where 1 indicates a match.
+    - local_students (pd.DataFrame): DataFrame with local student details, including their 'buddyCount' capacity.
+    - distance_matrix (pd.DataFrame): Matrix of distances between local and incoming students.
+
+    Returns:
+    - tuple[pd.DataFrame, pd.DataFrame]: Updated (local_students, distance_matrix) with students removed if they have reached capacity.
+    """
+    # Subset matching_matrix to only include rows of the currently active local students.
+    matching_sum = matching_matrix.loc[local_students.index].sum(axis=1)
+
+    # Compare the matching sum with the local capacities.
+    remaining_mask = matching_sum < local_students['buddyCount']
+
+    local_students_filtered = local_students[remaining_mask]
+    distance_matrix_filtered = distance_matrix.loc[local_students_filtered.index]
+
+    return local_students_filtered, distance_matrix_filtered #type: ignore
 
 def generate_matching_table(matching_matrix: pd.DataFrame, local_students: pd.DataFrame, incoming_students: pd.DataFrame) -> pd.DataFrame:
     """
